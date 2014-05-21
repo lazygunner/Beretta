@@ -134,6 +134,7 @@ LOGGING = {
 # WAGTAIL SETTINGS
 WAGTAIL_SITE_NAME = 'Beretta'
 
+USE_I18N = True
 # Override the search results template for wagtailsearch
 #WAGTAILSEARCH_RESULTS_TEMPLATE = 'tutorial/search_results.html'
 #WAGTAILSEARCH_RESULTS_TEMPLATE_AJAX = 'tutorial/includes/search_listing.html'
