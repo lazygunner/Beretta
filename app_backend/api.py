@@ -30,7 +30,7 @@ class BlogListView(APIView):
 
         return blogs
 
-    def get_context(self, request):
+    def get_blog_list(self, request):
         # Get blogs
         blogs = self.blogs
 
@@ -45,15 +45,19 @@ class BlogListView(APIView):
             blogs = blogs.filter(date__lte=date)
 
 
-        return blogs
+        return blogs[:1]
    
     def get(self, request):
-        blog_list = self.get_context(request)
+        blog_list = self.get_blog_list(request)
         serializer = BlogListSerializer(blog_list, many=True)
         return Response(serializer.data)
 
-#router = routers.DefaultRouters()
 
-#router.register(r'blog/$', BlogListView)
-#router.register(r'blog/(?P<pk>[0-9]+)/$', BlogDetailViewSet)
+def CommentListView(APIView):
+    
+    def get_comment_list(self, request):
+           pass 
+
+    def get(self, request):
+        comment_list = self.get_comment_list(request)
 

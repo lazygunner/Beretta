@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailcore.fields import RichTextField
@@ -104,7 +105,7 @@ BlogIndexPage.content_panels = [
 
 class BlogPage(Page):
     body = RichTextField(verbose_name=_("body"))
-    date = models.DateField(_("Post Date"))
+    date = models.DateField(verbose_name=_("Post Date"))
     indexed_fields = ('body', )
     search_name = _("Blog Page")
     head_image = models.ForeignKey(
@@ -127,4 +128,15 @@ BlogPage.content_panels = [
     FieldPanel('body', classname="full"),
 ]
 
-
+class Comment(models.Model):
+    body = models.CharField(max_length=255, verbose_name=_('Comment Body'))
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False, related_name='owned_comment')
+    date = models.DateField(verbose_name=_("Comment Date"))
+    blog = models.ForeignKey(
+        'app_backend.BlogPage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='comment'
+    )
+   
