@@ -20,8 +20,47 @@ class BlogDetailView(APIView):
 
 class BlogListView(APIView):
     
+    @property
+    def blogs(self):
+        # Get list of live blog pages that are descendants of this page
+        blogs = BlogPage.objects.live().descendant_of(self)
+
+        # Order by most recent date first
+        blogs = blogs.order_by('-date')
+
+        return blogs
+
+    def get_context(self, request):
+        # Get blogs
+        blogs = self.blogs
+
+        # Filter by tag
+        tag = request.GET.get('tag')
+        if tag:
+            blogs = blogs.filter(tags__name=tag)
+
+        # Filter by date
+        date = request.GET.get('date')
+        if date:
+            blogs = blogs.filter(date__lte=date)
+
+        # Pagination
+        page = request.GET.get('page')
+        paginator = Paginator(blogs, 10)  # Show 10 blogs per page
+        try:
+            blogs = paginator.page(page)
+        except PageNotAnInteger:
+            blogs = paginator.page(1)
+        except EmptyPage:
+            blogs = paginator.page(paginator.num_pages)
+
+        # Update template context
+        context = super(BlogIndexPage, self).get_context(request)
+        context['blogs'] = blogs
+        return context
+   
     def get(self, request):
-        blog_list = BlogPage.objects.all()
+        blog_list = get_context(request)
         serializer = BlogDetailSerializer(blog_list, many=True)
         return Response(serializer.data)
 
