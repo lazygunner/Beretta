@@ -3,7 +3,7 @@ from rest_framework import routers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from app_backend.models import BlogPage
-from app_backend.serializers import BlogDetailSerializer
+from app_backend.serializers import BlogDetailSerializer, BlogListSerializer
 
 class BlogDetailView(APIView):
 
@@ -23,7 +23,7 @@ class BlogListView(APIView):
     @property
     def blogs(self):
         # Get list of live blog pages that are descendants of this page
-        blogs = BlogPage.objects.live().descendant_of(self)
+        blogs = BlogPage.objects.live()
 
         # Order by most recent date first
         blogs = blogs.order_by('-date')
@@ -44,24 +44,12 @@ class BlogListView(APIView):
         if date:
             blogs = blogs.filter(date__lte=date)
 
-        # Pagination
-        page = request.GET.get('page')
-        paginator = Paginator(blogs, 10)  # Show 10 blogs per page
-        try:
-            blogs = paginator.page(page)
-        except PageNotAnInteger:
-            blogs = paginator.page(1)
-        except EmptyPage:
-            blogs = paginator.page(paginator.num_pages)
 
-        # Update template context
-        context = super(BlogIndexPage, self).get_context(request)
-        context['blogs'] = blogs
-        return context
+        return blogs
    
     def get(self, request):
-        blog_list = get_context(request)
-        serializer = BlogDetailSerializer(blog_list, many=True)
+        blog_list = self.get_context(request)
+        serializer = BlogListSerializer(blog_list, many=True)
         return Response(serializer.data)
 
 #router = routers.DefaultRouters()
