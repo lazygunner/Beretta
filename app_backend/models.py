@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.conf import settings
 
@@ -105,6 +106,7 @@ BlogIndexPage.content_panels = [
 
 class BlogPage(Page):
     body = RichTextField(verbose_name=_("body"))
+    desc = models.CharField(max_length=256, null=True, verbose_name=_("Description"))
     date = models.DateField(verbose_name=_("Post Date"))
     indexed_fields = ('body', )
     search_name = _("Blog Page")
@@ -125,13 +127,14 @@ BlogPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('date'),
     ImageChooserPanel('head_image'),
+    FieldPanel('desc'),
     FieldPanel('body', classname="full"),
 ]
 
 class Comment(models.Model):
     body = models.CharField(max_length=255, verbose_name=_('Comment Body'))
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False, related_name='owned_comment')
-    date = models.DateField(verbose_name=_("Comment Date"))
+    date = models.DateTimeField(verbose_name=_("Comment Date"), default=datetime.datetime.now())
     blog = models.ForeignKey(
         'app_backend.BlogPage',
         null=True,

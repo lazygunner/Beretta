@@ -16,7 +16,7 @@ from wagtail.wagtailsearch.urls import frontend as wagtailsearch_frontend_urls, 
 from wagtail.wagtailusers import urls as wagtailusers_urls
 from wagtail.wagtailredirects import urls as wagtailredirects_urls
 
-from app_backend.api import BlogListView, BlogDetailView
+from app_backend.api import BlogListView, BlogDetailView, CommentListView
 
 admin.autodiscover()
 
@@ -42,8 +42,9 @@ urlpatterns = patterns('',
     url(r'^search/', include(wagtailsearch_frontend_urls)),
 
     url(r'^documents/', include(wagtaildocs_urls)),
-    url(r'^api/blog', BlogListView.as_view()),
+    url(r'^api/blog$', BlogListView.as_view()),
     url(r'^api/blog/(?P<pk>[0-9]+)/$', BlogDetailView.as_view()),
+    url(r'^api/blog/(?P<blog_pk>[0-9]+)/comment$', CommentListView.as_view()),
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's serving mechanism
     url(r'', include(wagtail_urls)),

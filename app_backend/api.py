@@ -1,9 +1,9 @@
 from django.http import Http404
-from rest_framework import routers
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from app_backend.models import BlogPage
-from app_backend.serializers import BlogDetailSerializer, BlogListSerializer
+from app_backend.models import BlogPage, Comment
+from app_backend.serializers import BlogDetailSerializer, BlogListSerializer, CommentSerializer
 
 class BlogDetailView(APIView):
 
@@ -45,7 +45,7 @@ class BlogListView(APIView):
             blogs = blogs.filter(date__lte=date)
 
 
-        return blogs[:1]
+        return blogs[:10]
    
     def get(self, request):
         blog_list = self.get_blog_list(request)
@@ -53,11 +53,41 @@ class BlogListView(APIView):
         return Response(serializer.data)
 
 
-def CommentListView(APIView):
+class CommentListView(APIView):
     
-    def get_comment_list(self, request):
-           pass 
+    def get_comment_list(self, request, blog_pk):
+        try:
+            comments = Comment.objects.filter(blog=blog_pk)
+            return comments
+        except Comment.DoesNotExist:
+            raise Http404
+        
 
-    def get(self, request):
-        comment_list = self.get_comment_list(request)
+    def get(self, request, blog_pk):
+        comment_list = self.get_comment_list(request, blog_pk=blog_pk)
+        serializer = CommentSerializer(comment_list, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request, blog_pk):
+        data = request.DATA
+        data['blog'] = pk=blog_pk
+        serializer = CommentSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CommentDetailView(APIView):
+     
+    def get_comment(self, pk):
+        try:
+            return Comment.objects(pk=pk)
+        except Comment.DoesNotExist:
+            raise Http404
+   
+    def get(self, request, pk):
+        comment = get_comment(pk=pk)
+        serializer = CommentSerializer(comment)
+        return Response(serializer.data)
+
 
