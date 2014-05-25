@@ -29,15 +29,14 @@ class BlogListSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.Serializer):
     pk = serializers.Field()
-    owner = serializers.CharField()   
+    owner = serializers.Field()   
     body = serializers.CharField(max_length=255)
-    blog = serializers.CharField()
+    blog = serializers.Field()
     def restore_object(self, attrs, instance=None):
         if instance is not None:
             instance.body = attrs.get('body', instance.body)
-            instance.blog = attrs.get('blog', instance.blog)
             return instance
-        attrs['blog'] = BlogPage.objects.get(pk=attrs['blog'])
-        attrs['owner'] = User.objects.all().first()
+        attrs['blog'] = self.context['blog']
+        attrs['owner'] = self.context['owner']
         return Comment(**attrs)
 

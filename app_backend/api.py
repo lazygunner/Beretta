@@ -4,6 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from app_backend.models import BlogPage, Comment
 from app_backend.serializers import BlogDetailSerializer, BlogListSerializer, CommentSerializer
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class BlogDetailView(APIView):
 
@@ -54,7 +56,9 @@ class BlogListView(APIView):
 
 
 class CommentListView(APIView):
-    
+    authentication_classes = [TokenAuthentication,]
+    permission_classes = [IsAuthenticatedOrReadOnly,]
+   
     def get_comment_list(self, request, blog_pk):
         try:
             comments = Comment.objects.filter(blog=blog_pk)
@@ -67,11 +71,13 @@ class CommentListView(APIView):
         comment_list = self.get_comment_list(request, blog_pk=blog_pk)
         serializer = CommentSerializer(comment_list, many=True)
         return Response(serializer.data)
-    
+
     def post(self, request, blog_pk):
         data = request.DATA
-        data['blog'] = pk=blog_pk
-        serializer = CommentSerializer(data=data)
+        context = {}
+        context['blog'] = BlogPage.objects.get(pk=blog_pk)
+        context['owner'] = request.user
+        serializer = CommentSerializer(data=data, context=context)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

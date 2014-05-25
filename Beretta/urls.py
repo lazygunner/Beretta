@@ -42,6 +42,7 @@ urlpatterns = patterns('',
     url(r'^search/', include(wagtailsearch_frontend_urls)),
 
     url(r'^documents/', include(wagtaildocs_urls)),
+    url(r'^api_auth_token/', 'rest_framework.authtoken.views.obtain_auth_token'),
     url(r'^api/blog$', BlogListView.as_view()),
     url(r'^api/blog/(?P<pk>[0-9]+)/$', BlogDetailView.as_view()),
     url(r'^api/blog/(?P<blog_pk>[0-9]+)/comment$', CommentListView.as_view()),

@@ -1,6 +1,11 @@
 import datetime
 from django.db import models
+from django.db.models.signals import post_save
+from django.contrib.auth import get_user_model
+from django.dispatch import receiver
 from django.conf import settings
+
+from rest_framework.authtoken.models import Token
 
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailcore.fields import RichTextField
@@ -142,4 +147,13 @@ class Comment(models.Model):
         on_delete=models.SET_NULL,
         related_name='comment'
     )
-   
+  
+
+
+@receiver (post_save, sender=get_user_model())
+def cretae_auth_toker(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+
+
+ 
