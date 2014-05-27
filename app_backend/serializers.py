@@ -31,12 +31,13 @@ class CommentSerializer(serializers.Serializer):
     pk = serializers.Field()
     owner = serializers.Field()   
     body = serializers.CharField(max_length=255)
-    blog = serializers.Field()
+    date = serializers.DateTimeField()
+    #blog = serializers.Field()
     def restore_object(self, attrs, instance=None):
         if instance is not None:
             instance.body = attrs.get('body', instance.body)
             return instance
-        attrs['blog'] = self.context['blog']
+        #attrs['blog'] = self.context['blog']
         attrs['owner'] = self.context['owner']
         return Comment(**attrs)
 
