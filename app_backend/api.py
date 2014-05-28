@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from app_backend.models import BlogPage, Comment
-from app_backend.serializers import BlogDetailSerializer, BlogListSerializer, CommentSerializer
+from app_backend.serializers import BlogDetailSerializer, BlogListSerializer, CommentSerializer, UserSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
@@ -96,4 +96,15 @@ class CommentDetailView(APIView):
         serializer = CommentSerializer(comment)
         return Response(serializer.data)
 
-
+class UserListView(APIView):
+    
+    def post(self, request):
+        serializer = UserSerializer(data=request.DATA)
+        if serializer.is_valid():
+            data = serializer.create_user()
+            if(data.has_key('auth_token')):
+                return Response(data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
