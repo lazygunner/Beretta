@@ -1,4 +1,4 @@
-from .models import BlogPage, Comment
+from .models import BlogPage, Comment, Headphones
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from wagtail.wagtailimages.models import Image
@@ -19,6 +19,15 @@ class ImageField(serializers.RelatedField):
                 }
                 
         return image
+
+class CarouselImageField(serializers.RelatedField):
+    def to_native(self, value):
+        return value.get_rendition('fill-240x240').url
+                
+
+class PageField(serializers.RelatedField):
+    def to_native(self, value):
+        return value.title
 
 class BlogListSerializer(serializers.ModelSerializer):
     head_image = ImageField()
@@ -71,4 +80,27 @@ class UserSerializer(serializers.Serializer):
                 'auth_token': token.key
                }
         return data
-                
+'''
+class HeadphonesListSerializer(serializers.Serializer):
+'''
+    
+class HeadphonesListSerializer(serializers.ModelSerializer):
+    head_image = ImageField()
+    class Meta:
+        model = Headphones
+        #fields = ('title', 'description', 'transducer', 'wear_type', 'wire_length', 'size', 'weight')
+        fields = ('id', 'title', 'head_image')
+
+class CarouselItemSerializer(serializers.Serializer):
+    image = CarouselImageField()
+
+class HeadphonesDetailSerializer(serializers.Serializer):
+    carousel_items = CarouselItemSerializer(many=True)
+    title = serializers.CharField()
+    description = serializers.CharField(max_length=1024)
+    transducer = serializers.CharField(max_length=2)
+    wear_type = serializers.CharField(max_length=2)
+    wire_length = serializers.FloatField()
+    size = serializers.CharField(max_length=127)
+    weight = serializers.FloatField()
+

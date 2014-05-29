@@ -2,8 +2,8 @@ from django.http import Http404
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from app_backend.models import BlogPage, Comment
-from app_backend.serializers import BlogDetailSerializer, BlogListSerializer, CommentSerializer, UserSerializer
+from app_backend.models import BlogPage, Comment, Headphones
+from app_backend.serializers import BlogDetailSerializer, BlogListSerializer, CommentSerializer, UserSerializer, HeadphonesListSerializer, HeadphonesDetailSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
@@ -108,3 +108,52 @@ class UserListView(APIView):
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class HeadphonesListView(APIView):
+    
+    @property
+    def headphones(self):
+        # Get list of live blog pages that are descendants of this page
+        headphones = Headphones.objects.live()
+
+        # Order by most recent date first
+        #headphones = headphones.order_by('-page_ptr_id')
+
+        return headphones
+
+    def get_headphones_list(self, request):
+        # Get blogs
+        headphones = self.headphones
+
+        # Filter by title
+        title = request.GET.get('title')
+        if title:
+            headphones = headphones.filter(title__contains=title)
+
+        # Filter by 
+        transducer = request.GET.get('transducer')
+        if transducer:
+            headphones = headphones.filter(transducer__exact='MC')
+
+        return headphones[:10]
+   
+    def get(self, request):
+        headphones_list = self.get_headphones_list(request)
+        serializer = HeadphonesListSerializer(headphones_list, many=True)
+
+        return Response(serializer.data)
+
+class HeadphonesDetailView(APIView):
+
+    def get_object(self, pk):
+        try:
+            return Headphones.objects.get(pk=pk)
+        except Headphones.DoesNotExist:
+            raise Http404
+   
+    def get(self, request, pk):
+        headphone_detail = self.get_object(pk=pk)
+        serializer = HeadphonesDetailSerializer(headphone_detail)
+        return Response(serializer.data)
+

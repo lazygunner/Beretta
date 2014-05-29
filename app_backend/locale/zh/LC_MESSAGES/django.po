@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-29 14:43+0800\n"
+"POT-Creation-Date: 2014-05-29 16:23+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,89 +24,100 @@ msgstr "相关链接"
 msgid "Carousel Item"
 msgstr "图片集"
 
-#: models.py:131
+#: models.py:129
 msgid "Blog Index Page"
 msgstr "文章文件夹"
 
-#: models.py:143
+#: models.py:139
 msgid "body"
 msgstr "内容"
 
-#: models.py:144 models.py:184
+#: models.py:140 models.py:208
 msgid "Description"
 msgstr "描述"
 
-#: models.py:145
+#: models.py:141
 msgid "Post Date"
 msgstr "日期"
 
-#: models.py:147 models.py:156
+#: models.py:143 models.py:153 models.py:230
 msgid "Blog Page"
 msgstr "文章"
 
-#: models.py:171
+#: models.py:168
 msgid "Comment Body"
 msgstr "评论内容"
 
-#: models.py:173
+#: models.py:170
 msgid "Comment Date"
 msgstr "评论日期"
 
 #: models.py:183
-msgid "Name"
-msgstr "设备名"
-
-#: models.py:197
 msgid "Headphones Index"
 msgstr "耳机文件夹"
 
-#: models.py:207
+#: models.py:197
 msgid "Moving-coil"
 msgstr "动圈式"
 
-#: models.py:208
+#: models.py:198
 msgid "Electrostatic"
 msgstr "静电式"
 
-#: models.py:212
+#: models.py:202
 msgid "Circumaural"
 msgstr "罩耳式"
 
-#: models.py:213
+#: models.py:203
 msgid "Supra-aural"
 msgstr "贴耳式"
 
-#: models.py:214
+#: models.py:204
 msgid "Earbud"
 msgstr "挂耳式"
 
-#: models.py:215
+#: models.py:205
 msgid "In-ear"
 msgstr "入耳式"
 
-#: models.py:218
+#: models.py:209
 msgid "Transducer"
 msgstr "转化方式"
 
-#: models.py:219
+#: models.py:210
 msgid "Wear Type"
 msgstr "佩戴方式"
 
-#: models.py:220
+#: models.py:211
 msgid "Wire Length"
 msgstr "耳机线长度"
 
-#: models.py:221
+#: models.py:212
 msgid "Size"
 msgstr "耳机体积"
 
-#: models.py:222
+#: models.py:213
 msgid "Weight"
 msgstr "耳机重量"
 
-#: models.py:225
+#: models.py:221
+msgid "Head Image"
+msgstr "标题图片"
+
+#: models.py:234
 msgid "Headphones"
 msgstr "耳机"
+
+#: models.py:245
+msgid "Carousel items"
+msgstr "图片集"
+
+#: models.py:247
+msgid "Link Blog Page"
+msgstr "相关文章"
+
+#~ msgid "Name"
+#~ msgstr "设备名"
 
 #~ msgid "The page title as you'd like it to be seen by the public"
 #~ msgstr "页面标题，你想被大众所看到的"

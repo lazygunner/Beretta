@@ -62,7 +62,7 @@ class RelatedLink(LinkFields):
         abstract = True
         verbose_name = _('Related Links')
 
-class CarouselItem(LinkFields):
+class CarouselItem(models.Model):
     image = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -146,7 +146,8 @@ class BlogPage(Page):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='head_image'
+        related_name='head_image',
+        verbose_name='Head Image'
     )
     class Meta:
         verbose_name = _('Blog Page')
@@ -203,7 +204,6 @@ class Headphones(Page):
         ('EA', _('Earbud')),
         ('IN', _('In-ear')),
     )
-        
     description = models.CharField(verbose_name=_('Description'), max_length=1024, null=True)
     transducer = models.CharField(verbose_name=_('Transducer'), max_length=2, choices=TRANSDUCERS, default='MC')
     wear_type = models.CharField(verbose_name=_('Wear Type'), max_length=2, choices=WEAR_TYPE, default='CI')
@@ -211,12 +211,22 @@ class Headphones(Page):
     size = models.CharField(verbose_name=_('Size'), max_length=127)
     weight = models.FloatField(verbose_name=_('Weight'))
     
+    head_image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='headphones_head_image',
+        verbose_name=_('Head Image')
+    )
+   
     blog = models.ForeignKey(
         'app_backend.BlogPage',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='Headphones'
+        related_name='Headphones',
+        verbose_name=_('Link Blog Page')
     )
    
     class Meta:
@@ -230,9 +240,10 @@ Headphones.content_panels = [
     FieldPanel('wire_length'),
     FieldPanel('size'),
     FieldPanel('weight'),
-    InlinePanel(Headphones, 'carousel_items', label="Carousel items"),
-    InlinePanel(Headphones, 'related_links', label="Related links"),
-
+    ImageChooserPanel('head_image'),
+    InlinePanel(Headphones, 'carousel_items', label=_("Carousel items")),
+    #InlinePanel(Headphones, 'related_links', label="Related links"),
+    PageChooserPanel('blog'),
 ]
     
 
