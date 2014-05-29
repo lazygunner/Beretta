@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-21 17:01+0800\n"
+"POT-Creation-Date: 2014-05-29 14:43+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,22 +16,100 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: models.py:10
-msgid "The page title as you'd like it to be seen by the public"
-msgstr "页面标题，你想被大众所看到的"
+#: models.py:63
+msgid "Related Links"
+msgstr "相关链接"
 
-#: models.py:10
-msgid "title"
-msgstr "标题"
+#: models.py:84
+msgid "Carousel Item"
+msgstr "图片集"
 
-#: models.py:11
+#: models.py:131
+msgid "Blog Index Page"
+msgstr "文章文件夹"
+
+#: models.py:143
 msgid "body"
 msgstr "内容"
 
-#: models.py:12
+#: models.py:144 models.py:184
+msgid "Description"
+msgstr "描述"
+
+#: models.py:145
 msgid "Post Date"
 msgstr "日期"
 
-#: models.py:14
+#: models.py:147 models.py:156
 msgid "Blog Page"
 msgstr "文章"
+
+#: models.py:171
+msgid "Comment Body"
+msgstr "评论内容"
+
+#: models.py:173
+msgid "Comment Date"
+msgstr "评论日期"
+
+#: models.py:183
+msgid "Name"
+msgstr "设备名"
+
+#: models.py:197
+msgid "Headphones Index"
+msgstr "耳机文件夹"
+
+#: models.py:207
+msgid "Moving-coil"
+msgstr "动圈式"
+
+#: models.py:208
+msgid "Electrostatic"
+msgstr "静电式"
+
+#: models.py:212
+msgid "Circumaural"
+msgstr "罩耳式"
+
+#: models.py:213
+msgid "Supra-aural"
+msgstr "贴耳式"
+
+#: models.py:214
+msgid "Earbud"
+msgstr "挂耳式"
+
+#: models.py:215
+msgid "In-ear"
+msgstr "入耳式"
+
+#: models.py:218
+msgid "Transducer"
+msgstr "转化方式"
+
+#: models.py:219
+msgid "Wear Type"
+msgstr "佩戴方式"
+
+#: models.py:220
+msgid "Wire Length"
+msgstr "耳机线长度"
+
+#: models.py:221
+msgid "Size"
+msgstr "耳机体积"
+
+#: models.py:222
+msgid "Weight"
+msgstr "耳机重量"
+
+#: models.py:225
+msgid "Headphones"
+msgstr "耳机"
+
+#~ msgid "The page title as you'd like it to be seen by the public"
+#~ msgstr "页面标题，你想被大众所看到的"
+
+#~ msgid "title"
+#~ msgstr "标题"

@@ -60,14 +60,36 @@ class RelatedLink(LinkFields):
 
     class Meta:
         abstract = True
+        verbose_name = _('Related Links')
+
+class CarouselItem(LinkFields):
+    image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+#    embed_url = models.URLField("Embed URL", blank=True)
+#    caption = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        ImageChooserPanel('image'),
+#        FieldPanel('embed_url'),
+#        FieldPanel('caption'),
+#        MultiFieldPanel(LinkFields.panels, "Link"),
+    ]
+
+    class Meta:
+        verbose_name = _('Carousel Item')
+        abstract = True
+
 
 class BlogIndexPageRelatedLink(Orderable, RelatedLink):
     page = ParentalKey('app_backend.BlogIndexPage', related_name='related_links')
 
 class BlogIndexPage(Page):
-    intro = RichTextField(blank=True)
 
-    indexed_fields = ('intro', )
 
     @property
     def blogs(self):
@@ -103,11 +125,15 @@ class BlogIndexPage(Page):
         context['blogs'] = blogs
         return context
 
+    class Meta:
+        verbose_name = _('Blog Index Page')
+
 BlogIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
-    FieldPanel('intro', classname="full"),
-    InlinePanel(BlogIndexPage, 'related_links', label="Related links"),
 ]
+
+class BlogPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('app_backend.BlogPage', related_name='related_links')
 
 class BlogPage(Page):
     body = RichTextField(verbose_name=_("body"))
@@ -136,6 +162,7 @@ BlogPage.content_panels = [
     FieldPanel('body', classname="full"),
 ]
 
+
 class Comment(models.Model):
     body = models.CharField(max_length=255, verbose_name=_('Comment Body'))
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False, related_name='owned_comment')
@@ -149,6 +176,65 @@ class Comment(models.Model):
     )
   
 
+class HeadphonesIndexPage(Page):
+
+    class Meta:
+        verbose_name = _('Headphones Index')
+
+HeadphonesIndexPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+]
+
+class HeadphonesCarouselItem(Orderable, CarouselItem):
+    page = ParentalKey('app_backend.Headphones', related_name='carousel_items')
+
+class HeadphonesRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('app_backend.Headphones', related_name='related_links')
+    
+class Headphones(Page):
+    TRANSDUCERS = (
+        ('MC',_('Moving-coil')),
+        ('EL',_('Electrostatic')),
+    )
+        
+    WEAR_TYPE = (
+        ('CI', _('Circumaural')),
+        ('SU', _('Supra-aural')),
+        ('EA', _('Earbud')),
+        ('IN', _('In-ear')),
+    )
+        
+    description = models.CharField(verbose_name=_('Description'), max_length=1024, null=True)
+    transducer = models.CharField(verbose_name=_('Transducer'), max_length=2, choices=TRANSDUCERS, default='MC')
+    wear_type = models.CharField(verbose_name=_('Wear Type'), max_length=2, choices=WEAR_TYPE, default='CI')
+    wire_length = models.FloatField(verbose_name=_('Wire Length'))
+    size = models.CharField(verbose_name=_('Size'), max_length=127)
+    weight = models.FloatField(verbose_name=_('Weight'))
+    
+    blog = models.ForeignKey(
+        'app_backend.BlogPage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='Headphones'
+    )
+   
+    class Meta:
+        verbose_name = _('Headphones')
+   
+Headphones.content_panels = [
+    FieldPanel('title', classname="title full"),
+    FieldPanel('description', classname="full"),
+    FieldPanel('transducer'),
+    FieldPanel('wear_type'),
+    FieldPanel('wire_length'),
+    FieldPanel('size'),
+    FieldPanel('weight'),
+    InlinePanel(Headphones, 'carousel_items', label="Carousel items"),
+    InlinePanel(Headphones, 'related_links', label="Related links"),
+
+]
+    
 
 @receiver (post_save, sender=get_user_model())
 def cretae_auth_toker(sender, instance=None, created=False, **kwargs):
