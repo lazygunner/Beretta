@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 
 
+
 class BlogDetailSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = BlogPage
@@ -42,14 +43,18 @@ class CommentSerializer(serializers.Serializer):
     pk = serializers.Field()
     owner = serializers.Field()   
     body = serializers.CharField(max_length=255)
-    date = serializers.DateTimeField()
+    date = serializers.DateTimeField(blank=True)
     
     def restore_object(self, attrs, instance=None):
         if instance is not None:
             instance.body = attrs.get('body', instance.body)
             return instance
         attrs['owner'] = self.context['owner']
+        attrs['blog'] = self.context['blog']
         return Comment(**attrs)
+
+    class Meta:
+        fields = ('owner', 'body', 'date')
 
 class UserSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=255, required=True)
@@ -101,6 +106,8 @@ class HeadphonesDetailSerializer(serializers.Serializer):
     transducer = serializers.CharField(max_length=2)
     wear_type = serializers.CharField(max_length=2)
     wire_length = serializers.FloatField()
-    size = serializers.CharField(max_length=127)
+    frequency_range = serializers.CharField(max_length=127)
+    impendance = serializers.FloatField()
+    sensitivity = serializers.FloatField()
     weight = serializers.FloatField()
 

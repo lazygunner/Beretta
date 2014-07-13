@@ -1,3 +1,4 @@
+import datetime
 from django.http import Http404
 from rest_framework import status
 from rest_framework.views import APIView
@@ -61,7 +62,7 @@ class CommentListView(APIView):
    
     def get_comment_list(self, request, blog_pk):
         try:
-            comments = Comment.objects.filter(blog=blog_pk)
+            comments = Comment.objects.filter(blog=blog_pk).order_by('-date')
             return comments
         except Comment.DoesNotExist:
             raise Http404

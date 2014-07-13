@@ -167,7 +167,7 @@ BlogPage.content_panels = [
 class Comment(models.Model):
     body = models.CharField(max_length=255, verbose_name=_('Comment Body'))
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, editable=False, related_name='owned_comment')
-    date = models.DateTimeField(verbose_name=_("Comment Date"), default=datetime.datetime.now())
+    date = models.DateTimeField(verbose_name=_("Comment Date"), auto_now=True)
     blog = models.ForeignKey(
         'app_backend.BlogPage',
         null=True,
@@ -204,12 +204,14 @@ class Headphones(Page):
         ('EA', _('Earbud')),
         ('IN', _('In-ear')),
     )
-    description = models.CharField(verbose_name=_('Description'), max_length=1024, null=True)
+    description = RichTextField(verbose_name=_('Description'), max_length=1024, null=True)
     transducer = models.CharField(verbose_name=_('Transducer'), max_length=2, choices=TRANSDUCERS, default='MC')
     wear_type = models.CharField(verbose_name=_('Wear Type'), max_length=2, choices=WEAR_TYPE, default='CI')
-    wire_length = models.FloatField(verbose_name=_('Wire Length'))
-    size = models.CharField(verbose_name=_('Size'), max_length=127)
-    weight = models.FloatField(verbose_name=_('Weight'))
+    wire_length = models.FloatField(verbose_name=_('Wire Length(m)'), default=1)
+    weight = models.FloatField(verbose_name=_('Weight(g)'), default=5)
+    frequency_range = models.CharField(max_length=20, verbose_name=_('Frequency Range(Hz)'), default='10-20000')
+    impendance = models.FloatField(verbose_name=_('Impendance(Ohm)'), default=150)
+    sensitivity = models.FloatField(verbose_name=_('Sensitivity(dB)'), default=200)
     
     head_image = models.ForeignKey(
         'wagtailimages.Image',
@@ -238,8 +240,10 @@ Headphones.content_panels = [
     FieldPanel('transducer'),
     FieldPanel('wear_type'),
     FieldPanel('wire_length'),
-    FieldPanel('size'),
     FieldPanel('weight'),
+    FieldPanel('frequency_range'),
+    FieldPanel('impendance'),
+    FieldPanel('sensitivity'),
     ImageChooserPanel('head_image'),
     InlinePanel(Headphones, 'carousel_items', label=_("Carousel items")),
     #InlinePanel(Headphones, 'related_links', label="Related links"),
